@@ -32,6 +32,13 @@ class BufferOnPostPlugin extends BasePlugin
     {
         parent::init();
 
+        craft()->templates->hook('cp.entries.edit.right-pane', function(&$context) {
+        /** @var EntryModel $entry **/
+        $entry = $context['entry'];
+        // Return the button HTML
+        return '<a href="/admin/share?id='.$entry->id.'" class="btn">Schedule Social Media Post</a>';
+        });
+
         craft()->on('entries.onBeforeSaveEntry', function(Event $event) 
         {
             $entry = $event->params['entry'];
@@ -65,6 +72,12 @@ class BufferOnPostPlugin extends BasePlugin
                 }
             }
         });
+    }
+
+    function registerCpRoutes() {
+        return array(
+            'share' => array('action' => 'BufferOnPost/Share/share'),
+        );
     }
 
 }
